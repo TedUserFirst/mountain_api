@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+
+  postgres-mountain:
+    image: postgres:13
+    ports:
+      - '0.0.0.0:5432:5432'
+    volumes:
+      - db-volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: mountain_pwd
+      POSTGRES_USER: mountain_user
+      POSTGRES_DB: mountain_db
+    
+
+  mountain:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - app-volume:/mountain
+    ports:
+      - '0.0.0.0:8000:8000'
+    depends_on:
+      - postgres-mountain
+
+volumes:
+  db-volume:
+  app-volume:
